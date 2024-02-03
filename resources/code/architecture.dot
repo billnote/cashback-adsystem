@@ -1,0 +1,89 @@
+digraph architecture {
+    // node [style="filled",  fillcolor="#FEFECE", concentrate=true, color="#A80036"]
+
+    subgraph cluster_user {
+        label="用户注册模块";
+        style="dashed,rounded"
+        labelloc="b"
+        fontcolor="#A9A9A9"
+        bgcolor="#FEFECE"
+
+        user[label="用户管理服务", shape=box]
+        user_db[label="用户信息数据库", shape=cylinder]
+
+        rank=same
+    }
+
+    app -> user [label="1.0 用户注册", fontcolor="#4467DC"]
+    user -> user_db [label="1.1 数据处理", fontcolor="#4467DC"]
+
+    subgraph cluster_data{
+        label="数据仓库模块"
+        labelloc="b"
+        fontcolor="#A9A9A9"
+        style="dashed,rounded"
+        bgcolor="#FEFECE"
+
+        user_data[label="用户数据处理服务", shape=box]
+        ad_data[label="广告数据处理服务", shape=box]
+        pulsar[label="数据消息中间件", shape=box, style=rounded, width=5, height=0.2]
+        flink[label="流式数据处理", shape=component]
+        doris[label="实时数仓", shape=cylinder]
+
+        ad_data -> pulsar[label="3.7 发送广告数据", fontcolor="#000080"]
+        user_data -> pulsar[label="1.3 发送用户数据", fontcolor="#4467DC"]
+        pulsar -> flink[label="4.0 订阅数据进行实时计算", fontcolor="#2234D5"]
+        flink -> doris[label="4.1 将处理后数据存入实时数仓", fontcolor="#2234D5"]
+    }
+
+    user_db -> user_data [label="1.2 ETL", fontcolor="#4467DC"]
+
+    subgraph cluster_cache{
+        label="数据缓存模块"
+        labelloc="b"
+        fontcolor="#A9A9A9"
+        style="dashed,rounded"
+
+        ad_cache[label="广告缓存数据", shape=cylinder]
+        user_cache[label="用户缓存数据", shape=cylinder]
+    }
+
+    flink -> user_cache[label="4.2 写入处理后用户数据信息", fontcolor="#2234D5"]
+
+    dsp[label="外部广告系统", shape=box]
+    subgraph cluster_addata{
+        label="广告信息处理模块"
+        labelloc="b"
+        fontcolor="#A9A9A9"
+        style="dashed,rounded"
+        bgcolor="#FEFECE"
+
+        ad_pull[label="广告获取模块", shape=box]
+        ad_process[label="广告预处理模块", shape=box]
+    }
+
+    dsp -> ad_pull[label="2.0 定期拉取广告信息", fontcolor="#0000CD"]
+    ad_pull -> ad_process[label="2.1 处理广告信息", fontcolor="#0000CD"]
+    ad_process -> ad_cache[label="2.2 写入预处理后的广告信息", fontcolor="#0000CD"]
+
+    subgraph cluster_adserver{
+        label="广告服务模块"
+        labelloc="b"
+        fontcolor="#A9A9A9"
+        style="dashed,rounded"
+        bgcolor="#FEFECE"
+
+        adserver[label="广告投放服务", shape=box]
+        adtracker[label="广告监测服务", shape=box]
+    }
+
+    adserver -> ad_cache [label="3.1 获取广告信息", fontcolor="#000080"]
+    adserver -> user_cache [label="3.2 查询用户信息", fontcolor="#000080"]
+
+    app -> adserver[label="3.0 请求广告", fontcolor="#000080"]
+    app -> adtracker[label="3.4 发送广告监测信息", fontcolor="#000080"]
+    dsp -> adtracker[label="3.5 发送广告监测信息", fontcolor="#000080"]
+
+    adserver -> ad_data[label="3.3 发送广告请求数据", fontcolor="#000080"]
+    adtracker -> ad_data[label="3.6 发送广告监测数据", fontcolor="#000080"]
+}

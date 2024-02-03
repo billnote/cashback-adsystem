@@ -1,0 +1,83 @@
+#+TITLE: 返现广告系统设计
+#+LATEX_CLASS: cn-article
+#+LATEX_HEADER: \fancyhead[R]{返现广告系统设计}
+#+LATEX_HEADER: \fancyhead[C]{\rightmark}
+#+LATEX_HEADER: \fancyfoot[C]{Copyright © 2024- Bill.}
+#+LATEX_HEADER: \fancyfoot[R]{\thepage}
+#+LATEX_HEADER: \tcbset{enhanced,fonttitle=\bfseries\large,fontupper=\normalsize\sffamily,
+#+LATEX_HEADER: colback=yellow!10!white,colframe=orange!75!white,colbacktitle=Salmon!30!white,
+#+LATEX_HEADER: coltitle=black,center title}
+#+LATEX_HEADER: \usepackage{placeins}
+#+OPTIONS: toc:5
+
+#+AUTHOR: Bill
+#+EMAIL: jxsrhsb@gmail.com
+
+#+LATEX: \newpage
+#+LATEX: \rowcolors{1}{Linen}{Beige} % table 行颜色设置
+
+* 需求
+Task ：“系统设计挑战：奖励返现应用的广告分发后端”
+
++ 目标：设计一个可扩展且高效的奖励返现应用后端系统，该系统需要与第三方广告平台集成。系统应管理用户注册、处理并匿名化用户数据以用于广告定位，并处理广告分发。
+
++ 要求：
+  + 用户注册与数据管理：
+    + 设计用于用户注册的API端点，包括数据验证和存储。实现每个用户生成本地DID（去中心化标识符）的机制，以确保隐私和数据主权。
+    + 提出一种策略，用于在使用用户数据进行广告定位之前匿名化用户数据，以确保用户隐私。
+
+  + 广告分发系统：
+    + 设计一个系统，从第三方广告平台获取广告，并根据匿名用户数据将广告分发给应用用户。
+    + 确保系统可以扩展以支持高量级的广告请求和用户数据处理。
+  + 数据存储与处理：
+    + 提出适合存储用户数据、广告元数据和交易日志的数据库架构。
+    + 设计一个数据处理管道，用于分析用户活动和偏好，以进行有针对性的广告分发。
+
+  + 系统可扩展性和性能：
+    + 详细说明扩展后端以处理日益增长的用户数量和增加的数据量的方法。
+    + 包括负载均衡、缓存、数据库优化和微服务（如果适用）的考虑。
+
+  + 安全性和合规性：
+    + 概述保护用户数据和系统完整性的安全措施。
+    + 考虑遵守数据保护法规（例如GDPR）。
+
+  + 技术栈：
+    + 鉴于您在Rust和Go方面的熟练程度，请选择其中一种语言进行系统实现。根据系统要求证明您的选择。
+    + 描述其他技术（数据库、云平台、工具）的选择以及它们如何集成到架构中。
+
++ 交付物
+  + 一个展示所有组件及其相互作用的高层次系统架构图。
+  + 每个组件的详细描述，包括其角色、使用的技术以及如何扩展。
+  + 关于系统如何确保用户数据隐私并遵守相关数据保护法律的简要说明。
+  + 设计过程中做出的任何假设。
+
+* 主要业务数据流
+
+   #+NAME: fig:architecture
+   #+INCLUDE:  ./resources/code/architecture.dot src dot :file ./resources/img/architecture.png :cmdline -Kdot -Tpng
+   #+CAPTION: 业务数据流
+   #+RESULTS: fig:architecture
+   #+LATEX: \FloatBarrier
+
+系统主要涉及四个业务数据流，分别为：
++ 1. 用户注册
++ 2. 广告信息同步
++ 3. 广告投放
++ 4. 广告数据处理
+
+* 模块详解
+
+
+** 用户注册
+
+** 广告分发系统
+
+* 非功能性目标
+
+** 可扩展性
+
+** 性能
+
+** 安全性
+
+** 数据合规
