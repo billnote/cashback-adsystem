@@ -54,7 +54,7 @@ Task ：“系统设计挑战：奖励返现应用的广告分发后端”
 * 主要业务数据流
 
    #+NAME: fig:architecture
-   #+INCLUDE:  ./resources/code/architecture.dot src dot :file ./resources/img/architecture.png :cmdline -Kdot -Tpng
+   #+INCLUDE:  ./resources/code/data-stream.dot src dot :file ./resources/img/data-stream.png :cmdline -Kdot -Tpng
    #+CAPTION: 业务数据流
    #+RESULTS: fig:architecture
    #+LATEX: \FloatBarrier
@@ -63,14 +63,45 @@ Task ：“系统设计挑战：奖励返现应用的广告分发后端”
 + 1. 用户注册
 + 2. 广告信息同步
 + 3. 广告投放
-+ 4. 广告数据处理
++ 4. 用户及广告数据处理
 
-* 模块详解
+* 系统技术架构
+   #+NAME: fig:architecture
+   file:./resources/img/architecture.png
+   #+CAPTION: 业务数据流
+   #+RESULTS: fig:architecture
+   #+LATEX: \FloatBarrier
 
++ 系统技术架构简要说明：
+  1. 系统分为三大模块： 广告信息获取模块、广告投放模块和广告数据平台。
+  2. 在架构图中只体现主要模块的核心应用，在实际实施中可能需要对模块经一步细分。
 
-** 用户注册
++ 相关技术选型
+  1. 广告数据平台：
+     + 首选开发语言：Java
+     + 消息队列： Pulsar
+     + 实时数仓：Apache Doris
+     + 流式计算： Flink
+     + 离线数仓：基于Hadoop，相关组件选择视具体业务场景
+     + 缓存服务： Redis & Redis Cluster
+  2. 广告拉取模块：
+     + 首选开发语言：Java
+     + 数据库：PostgreSQL（主从部署）
+  3. 用户管理模块：
+     + 首选开发语言：Java
+     + 数据库：PostgreSQL （主从部署、分库分表）
+  4. 广告投放模块
+     + 首选开发语言：Rust
 
-** 广告分发系统
+* 模块简述
+
+** 广告数据平台
+
+** 广告拉取模块
+
+** 用户管理模块
+
+** 广告投放模块
 
 * 非功能性目标
 
